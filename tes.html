@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CodingStella — Dummy Clone</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent:#2bb673;
+      --muted:#6b6b6b;
+      --card-bg:#ffffff;
+      --bg:#f6f7fb;
+      --border:#e6e6e9;
+      --shadow: 0 6px 20px rgba(20,20,40,0.06);
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:var(--bg);
+      color:#222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.35;
+      font-size:15px;
+    }
+
+    /* Container */
+    .wrap{
+      max-width:1200px;
+      margin:30px auto;
+      padding:0 20px;
+    }
+
+    /* Header */
+    header.topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:26px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo{
+      width:48px;height:48px;border-radius:50%;
+      background:linear-gradient(135deg,#5ad7ff,#8a9bff);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-weight:700;box-shadow:var(--shadow);
+    }
+    .site-title{font-weight:700;color:#0b1a2b}
+    nav.mainnav{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      flex:1;
+      justify-content:center;
+    }
+    nav.mainnav a{
+      text-decoration:none;color:#333;padding:8px 10px;border-radius:8px;font-weight:600;font-size:14px;
+    }
+    nav.mainnav a.active{color:var(--accent);border-bottom:3px solid var(--accent);padding-bottom:6px}
+    .right-actions{display:flex;gap:12px;align-items:center}
+    .search{
+      width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--border);background:#fff;
+    }
+
+    /* Featured section */
+    .section-title{
+      text-align:center;margin:12px 0 18px;font-weight:700;font-size:18px;
+    }
+    .featured-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+      margin-bottom:20px;
+    }
+    .card{
+      background:var(--card-bg);
+      border-radius:12px;padding:12px;border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .thumb{
+      width:100%;height:110px;border-radius:8px;overflow:hidden;margin-bottom:10px;background:#ddd;
+      display:block;object-fit:cover;
+    }
+    .meta-tag{
+      display:inline-block;padding:6px 8px;border-radius:8px;font-size:12px;background:rgba(0,0,0,0.06);font-weight:700;color:#fff;
+      margin-bottom:8px;
+    }
+    .tag-ebook{background:#2b9bb6}
+    .tag-html{background:#e86e6e}
+    .card h4{margin:0 0 8px;font-size:14px}
+    .card .byline{font-size:12px;color:var(--muted)}
+
+    /* Banner (big) */
+    .big-banner{
+      margin:26px 0;padding:26px;border-radius:14px;background:linear-gradient(90deg,#2a2f33,#353a3e);
+      color:#9be4a6;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      box-shadow:var(--shadow);
+    }
+    .big-banner .content{max-width:85%}
+    .big-banner h2{margin:0 0 6px;font-size:20px;color:#9be4a6}
+    .big-banner p{margin:0;color:#cbd2cf}
+
+    /* Main layout */
+    .main{
+      display:grid;
+      grid-template-columns:1fr 320px;
+      gap:26px;
+      margin-top:10px;
+    }
+
+    /* Recent posts list (grid with two columns) */
+    .recent-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+    .post-card{
+      display:flex;gap:12px;align-items:flex-start;
+      background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);
+    }
+    .post-card .p-thumb{width:170px;height:110px;border-radius:8px;flex-shrink:0;overflow:hidden}
+    .post-card h3{margin:0 0 8px;font-size:15px}
+    .post-card .tag{display:inline-block;padding:6px 8px;border-radius:8px;background:#e84a5a;color:#fff;font-weight:700;font-size:12px;margin-bottom:10px}
+
+    /* Sidebar */
+    aside.sidebar{
+      position:relative;
+    }
+    .follow-box{
+      background:var(--card-bg);padding:18px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);
+    }
+    .follow-box h4{margin:0 0 10px}
+    .follow-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn-follow{display:flex;align-items:center;gap:8px;border-radius:8px;padding:8px;border:1px solid var(--border);background:#fff;text-decoration:none;color:#333;font-weight:600;font-size:13px}
+
+    .popular{
+      margin-top:18px;background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);
+    }
+    .popular .small{
+      display:flex;gap:10px;align-items:center;margin-bottom:10px;
+    }
+    .small img{width:64px;height:44px;border-radius:6px;object-fit:cover}
+
+    /* HTML & CSS section (duplicate thumbnails row) */
+    .section-row{
+      margin-top:26px;padding-top:16px;border-top:1px solid var(--border);
+    }
+    .row-cards{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px}
+    .row-card{flex:1 1 45%;background:var(--card-bg);padding:12px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
+    .row-card img{width:100%;height:150px;border-radius:8px;object-fit:cover;margin-bottom:10px}
+
+    /* Footer small */
+    footer{margin:40px 0;color:var(--muted);font-size:13px;text-align:center}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .featured-grid{grid-template-columns:repeat(2,1fr)}
+      .main{grid-template-columns:1fr 300px}
+      .recent-grid{grid-template-columns:1fr}
+      .post-card .p-thumb{width:200px;height:120px}
+    }
+    @media (max-width:720px){
+      .topbar{flex-direction:column;align-items:flex-start}
+      nav.mainnav{display:none}
+      .main{grid-template-columns:1fr}
+      .featured-grid{grid-template-columns:1fr}
+      .row-card{flex-basis:100%}
+      .post-card{flex-direction:column}
+      .post-card .p-thumb{width:100%;height:160px}
+      .brand{gap:10px}
+      .big-banner{flex-direction:column;align-items:flex-start}
+    }
+
+    /* tiny helpers */
+    .muted{color:var(--muted);font-size:13px}
+    .view-all{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;text-decoration:none;font-weight:600;margin-left:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Header -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CS</div>
+        <div>
+          <div class="site-title">CodingStella</div>
+          <div class="muted" style="font-size:12px">Frontend & Tutorials</div>
+        </div>
+      </div>
+
+      <nav class="mainnav" aria-label="Main navigation">
+        <a href="#">Home</a>
+        <a href="#" class="active">Blog</a>
+        <a href="#">HTML & CSS</a>
+        <a href="#">JavaScript</a>
+        <a href="#">Hire Us!</a>
+      </nav>
+
+      <div class="right-actions">
+        <div class="search" title="Search">🔍</div>
+      </div>
+    </header>
+
+    <!-- Featured -->
+    <h3 class="section-title">Featured Post</h3>
+
+    <div class="featured-grid">
+      <article class="card">
+        <img class="thumb" src="https://via.placeholder.com/400x220?text=Ebook+Cover" alt="thumb">
+        <div class="meta-tag tag-ebook">EBOOK</div>
+        <h4>Master Frontend in 100 Days Ebook</h4>
+        <div class="byline muted">By Coding Stella • 2 March 2024</div>
+      </article>
+
+      <article class="card">
+        <img class="thumb" src="https://via.placeholder.com/400x220?text=Glassmorphism" alt="thumb">
+        <div class="meta-tag tag-html" style="background:#56a0ff">HTML & CSS</div>
+        <h4>How to make Modern Login Form using HTML & CSS | Glassmorphism</h4>
+        <div class="byline muted">By Coding Stella • 11 January 2024</div>
+      </article>
+
+      <article class="card">
+        <img class="thumb" src="https://via.placeholder.com/400x220?text=I+Love+You" alt="thumb">
+        <div class="meta-tag" style="background:#6a56ff">JAVASCRIPT</div>
+        <h4>How to make I love you Animation in HTML CSS & JavaScript</h4>
+        <div class="byline muted">By Coding Stella • 14 February 2024</div>
+      </article>
+
+      <article class="card">
+        <img class="thumb" src="https://via.placeholder.com/400x220?text=Valentine+Card" alt="thumb">
+        <div class="meta-tag" style="background:#d28a8a">HTML & CSS</div>
+        <h4>How to make Valentine's Day Card using HTML & CSS</h4>
+        <div class="byline muted">By Coding Stella • 13 February 2024</div>
+      </article>
+    </div>
+
+    <!-- Big banner -->
+    <div class="big-banner" role="banner">
+      <div class="content">
+        <h2>AI coding assistant</h2>
+        <p>Write code faster, find errors quickly, and add generated code with a click. Try our assistant on your next project.</p>
+      </div>
+      <div style="display:grid;place-items:center">
+        <div style="width:44px;height:44px;border-radius:50%;background:#2bb673;display:grid;place-items:center;color:#fff;font-weight:700">→</div>
+      </div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="main">
+      <!-- Left: content -->
+      <main>
+        <h4 style="margin:0 0 12px">Recent Post</h4>
+        <div class="recent-grid">
+          <!-- Post 1 -->
+          <article class="post-card">
+            <img class="p-thumb" src="https://via.placeholder.com/700x400?text=Electric+Border+1" alt="">
+            <div>
+              <div class="tag">HTML & CSS</div>
+              <h3>How to make Animated Electric Card using HTML & CSS</h3>
+              <div class="muted">By Coding Stella • 4 October 2025</div>
+            </div>
+          </article>
+
+          <!-- Post 2 -->
+          <article class="post-card">
+            <img class="p-thumb" src="https://via.placeholder.com/700x400?text=Electric+Button" alt="">
+            <div>
+              <div class="tag">HTML & CSS</div>
+              <h3>How to make Next Level Electric Button Animation using HTML & CSS</h3>
+              <div class="muted">By Coding Stella • 2 October 2025</div>
+            </div>
+          </article>
+
+          <!-- Post 3 -->
+          <article class="post-card">
+            <img class="p-thumb" src="https://via.placeholder.com/700x400?text=Chair+Product" alt="">
+            <div>
+              <div class="tag">HTML & CSS</div>
+              <h3>How to make Animated Chair Product Page using HTML & CSS</h3>
+              <div class="muted">By Coding Stella • 30 September 2025</div>
+            </div>
+          </article>
+
+          <!-- Post 4 -->
+          <article class="post-card">
+            <img class="p-thumb" src="https://via.placeholder.com/700x400?text=Heart+Animation" alt="">
+            <div>
+              <div class="tag" style="background:#5a6bff">JAVASCRIPT</div>
+              <h3>How to create Heart and Star Animation using HTML CSS and JS</h3>
+              <div class="muted">By Coding Stella • 27 September 2025</div>
+            </div>
+          </article>
+        </div>
+
+        <!-- HTML & CSS section -->
+        <section class="section-row">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <h4 style="margin:0">HTML & CSS</h4>
+            <a class="view-all" href="#">View All</a>
+          </div>
+
+          <div class="row-cards">
+            <div class="row-card">
+              <img src="https://via.placeholder.com/800x400?text=Electric+Card+2" alt="">
+              <h4 style="margin:0 0 6px">How to make Animated Electric Card using HTML & CSS</h4>
+              <div class="muted" style="font-size:13px">By Coding Stella • 4 October 2025</div>
+            </div>
+            <div class="row-card">
+              <img src="https://via.placeholder.com/800x400?text=Electric+Button+2" alt="">
+              <h4 style="margin:0 0 6px">How to make Next Level Electric Button Animation using HTML & CSS</h4>
+              <div class="muted" style="font-size:13px">By Coding Stella • 2 October 2025</div>
+            </div>
+          </div>
+
+        </section>
+      </main>
+
+      <!-- Right: sidebar -->
+      <aside class="sidebar">
+        <div class="follow-box">
+          <h4>Follow Us</h4>
+          <div class="follow-grid" style="margin-top:8px">
+            <a class="btn-follow" href="#"><span>📘</span> Facebook</a>
+            <a class="btn-follow" href="#"><span>🐦</span> Twitter</a>
+            <a class="btn-follow" href="#"><span>📸</span> Instagram</a>
+            <a class="btn-follow" href="#"><span>✈️</span> Telegram</a>
+            <a style="grid-column:span 2;margin-top:8px" class="btn-follow" href="#"><span>▶️</span> YouTube</a>
+          </div>
+        </div>
+
+        <div class="popular">
+          <h4 style="margin:0 0 10px">Popular Tutorials</h4>
+
+          <div class="small">
+            <img src="https://via.placeholder.com/160x90?text=Ebook" alt="">
+            <div>
+              <div style="font-weight:700;font-size:13px">Master Frontend in 100 Days Ebook</div>
+              <div class="muted" style="font-size:12px">By Coding Stella • 2 March 2024</div>
+            </div>
+          </div>
+
+          <div class="small">
+            <img src="https://via.placeholder.com/160x90?text=Login+Form" alt="">
+            <div>
+              <div style="font-weight:700;font-size:13px">How to make Modern Login Form using HTML & CSS</div>
+              <div class="muted" style="font-size:12px">By Coding Stella • 11 January 2024</div>
+            </div>
+          </div>
+
+          <div class="small">
+            <img src="https://via.placeholder.com/160x90?text=I+Love+You" alt="">
+            <div>
+              <div style="font-weight:700;font-size:13px">How to make I love you Animation in HTML CSS</div>
+              <div class="muted" style="font-size:12px">By Coding Stella • 14 February 2024</div>
+            </div>
+          </div>
+
+          <div class="small">
+            <img src="https://via.placeholder.com/160x90?text=Valentine" alt="">
+            <div>
+              <div style="font-weight:700;font-size:13px">How to make Valentine's Day Card using HTML & CSS</div>
+              <div class="muted" style="font-size:12px">By Coding Stella • 13 February 2024</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      © 2025 CodingStella — Demo clone UI. Gambar placeholder dibuat otomatis.
+    </footer>
+  </div>
+</body>
+</html>

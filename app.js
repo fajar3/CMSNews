@@ -118,6 +118,7 @@ app.get('/', async (req, res) => {
 });
 
 // === Detail Post ===
+// === Detail Post ===
 app.get('/post/:slug', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM posts WHERE slug=?', [req.params.slug]);
@@ -137,17 +138,24 @@ app.get('/post/:slug', async (req, res) => {
       relatedPosts = related;
     }
 
+    // ✅ Tambahkan ini biar trending ada juga di halaman post
+    const [trending] = await db.query('SELECT * FROM posts ORDER BY views DESC LIMIT 5');
+
+    // Render ke EJS
     res.render('post', { 
       title: post.title,
       layout: 'layouts/main',
       post,
-      relatedPosts
+      relatedPosts,
+      trending
     });
+
   } catch (err) {
-    console.error(err);
-    res.send('Error loading post');
+    console.error('🔥 Error detail post:', err);
+    res.status(500).send('Error loading post');
   }
 });
+
 
 // === Jalankan Server ===
 app.listen(PORT, () => console.log(`✅ Server running at http://localhost:${PORT}`));
