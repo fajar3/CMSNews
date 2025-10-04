@@ -1,0 +1,123 @@
+
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <h2>Login Admin</h2>
+
+    <% if (error) { %>
+      <div class="error"><i class="fa-solid fa-circle-exclamation"></i> <%= error %></div>
+    <% } %>
+
+    <form action="/login" method="POST">
+      <div class="input-group">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" name="username" placeholder="Username" required />
+      </div>
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" name="password" placeholder="Password" required />
+      </div>
+      <button type="submit"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
+    </form>
+
+    <p>Belum punya akun? <a href="/admin/register">Daftar</a></p>
+  </div>
+</div>
+
+<style>
+  body {
+    background: #f3f6fd;
+  }
+
+  .login-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-card {
+    background: #fff;
+    padding: 40px 35px;
+    width: 380px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-card h2 {
+    text-align: center;
+    color: #004aad;
+    margin-bottom: 25px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .input-group i {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #888;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 10px 12px 10px 38px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+
+  .input-group input:focus {
+    border-color: #004aad;
+  }
+
+  button {
+    width: 100%;
+    background: #004aad;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #00357a;
+  }
+
+  .error {
+    background: #ffe6e6;
+    color: #b30000;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+  }
+
+  p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: #004aad;
+    text-decoration: none;
+  }
+
+  a:hover { text-decoration: underline; }
+</style>

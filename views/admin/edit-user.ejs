@@ -1,0 +1,52 @@
+<div class="card" style="padding:30px;background:white;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.08);max-width:600px;margin:auto;">
+  <h2 style="color:#004aad;margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+    <i class="fa-solid fa-user-pen"></i> Edit Pengguna
+  </h2>
+
+  <form action="/admin/users/edit/<%= editUser.id %>" method="POST" style="display:flex;flex-direction:column;gap:15px;">
+   
+
+    <div>
+      <label>Username</label>
+      <input type="text" name="username" value="<%= editUser.username %>" required
+             style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+    </div>
+
+    <div>
+      <label>Role</label>
+      <select name="role" required style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+        <option value="superadmin" <%= editUser.role === 'superadmin' ? 'selected' : '' %>>Superadmin</option>
+        <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>Admin</option>
+        <option value="penulis" <%= editUser.role === 'penulis' ? 'selected' : '' %>>Penulis</option>
+      </select>
+    </div>
+
+    <div style="position:relative;">
+      <label>Password Baru (kosongkan jika tidak ingin mengubah)</label>
+      <input type="password" id="password" name="password" placeholder="********"
+             style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+      <i class="fa fa-eye" id="togglePassword" 
+         style="position:absolute;right:10px;top:38px;cursor:pointer;color:#888;"></i>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <a href="/admin/users" style="background:#ccc;color:black;text-decoration:none;padding:10px 15px;border-radius:6px;display:flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-arrow-left"></i> Batal
+      </a>
+      <button type="submit" style="background:#004aad;color:white;padding:10px 15px;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-floppy-disk"></i> Simpan
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const togglePassword = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+
+  togglePassword.addEventListener('click', () => {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    togglePassword.classList.toggle('fa-eye-slash');
+  });
+</script>

@@ -1,0 +1,60 @@
+<div class="card">
+  <div class="top-actions" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <h2 style="font-size:1.4rem;color:#004aad;font-weight:600;">
+      <i class="fa-solid fa-newspaper"></i> Daftar Artikel
+    </h2>
+    <a href="/admin/add"
+       style="background:#004aad;color:white;text-decoration:none;padding:10px 18px;border-radius:6px;font-weight:500;display:flex;align-items:center;gap:6px;">
+      <i class="fa-solid fa-circle-plus"></i> Tambah Artikel
+    </a>
+  </div>
+
+  <% if (posts.length === 0) { %>
+    <p style="text-align:center;color:#777;font-style:italic;">Belum ada artikel yang dipublikasikan.</p>
+  <% } else { %>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden;">
+        <thead>
+          <tr style="background:#004aad;color:white;">
+            <th style="text-align:left;padding:12px 15px;">Gambar</th>
+            <th style="text-align:left;padding:12px 15px;">Judul</th>
+            <th style="text-align:left;padding:12px 15px;">Kategori</th>
+            <th style="text-align:left;padding:12px 15px;">Penulis</th>
+            <th style="text-align:left;padding:12px 15px;">Tanggal</th>
+            <th style="text-align:left;padding:12px 15px;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% posts.forEach(post => { %>
+            <tr style="border-bottom:1px solid #eee;">
+              <td style="padding:10px 15px;">
+                <% if (post.image) { %>
+                  <img src="<%= post.image %>" alt="image"
+                       style="width:80px;height:50px;object-fit:cover;border-radius:4px;">
+                <% } else { %>
+                  <span style="color:#aaa;">-</span>
+                <% } %>
+              </td>
+              <td style="padding:10px 15px;font-weight:500;"><%= post.title %></td>
+              <td style="padding:10px 15px;"><%= post.category || '-' %></td>
+              <td style="padding:10px 15px;"><%= post.author_name || '-' %></td>
+
+              <td style="padding:10px 15px;"><%= new Date(post.created_at).toLocaleDateString('id-ID') %></td>
+              <td class="actions" style="padding:10px 15px;">
+                <a href="/admin/edit/<%= post.id %>"
+                   style="background:#007bff;color:white;text-decoration:none;padding:6px 10px;border-radius:5px;font-size:0.9rem;margin-right:6px;display:inline-flex;align-items:center;gap:4px;">
+                   <i class="fa-solid fa-pen-to-square"></i> Edit
+                </a>
+                <a href="/admin/delete/<%= post.id %>"
+                   onclick="return confirm('Yakin ingin menghapus artikel ini?')"
+                   style="background:#dc3545;color:white;text-decoration:none;padding:6px 10px;border-radius:5px;font-size:0.9rem;display:inline-flex;align-items:center;gap:4px;">
+                   <i class="fa-solid fa-trash"></i> Hapus
+                </a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title || "Dashboard Admin" %>
+  </title>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+/>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: #f4f6f9;
+      color: #333;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #004aad;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin: 5px 0;
+      display: block;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #003380;
+    }
+
+    /* Main area */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: white;
+      border-bottom: 1px solid #ddd;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      font-size: 18px;
+      color: #004aad;
+    }
+
+    .navbar .user {
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    button {
+      background: #004aad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #003380;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <h2><i class="fa-solid fa-gear"></i> Admin Panel</h2>
+    <a href="/admin/dashboard" class="<%= (active === 'dashboard') ? 'active' : '' %>">
+      <i class="fa-solid fa-chart-column"></i> Dashboard
+    </a>
+    <a href="/admin/add" class="<%= (active === 'add') ? 'active' : '' %>">
+      <i class="fa-solid fa-plus"></i> Tambah Artikel
+    </a>
+     <% if (user.role === 'superadmin') { %>
+    <a href="/admin/users" class="<%= (active === 'users') ? 'active' : '' %>">
+      <i class="fa-solid fa-users"></i> Kelola Pengguna
+    </a>
+  <% } %>
+  <a href="/admin/articles-list" class="<%= (active === 'articles') ? 'active' : '' %>">
+        <i class="fa-solid fa-newspaper"></i> Kelola Artikel
+      </a>
+    <a href="/logout">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </a>
+  </div>
+
+
+  <div class="main">
+    <div class="navbar">
+      <h1>
+        <%= title || "Dashboard" %>
+      </h1>
+      <div class="user">
+        <%= user ? "👤 " + user.username : "Guest" %>
+      </div>
+    </div>
+    <div class="content">
+      <%- body %>
+    </div>
+  </div>
+
+</body>
+
+</html>

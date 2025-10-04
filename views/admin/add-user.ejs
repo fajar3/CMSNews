@@ -1,0 +1,15 @@
+<h2>Tambah Pengguna Baru</h2>
+<form action="/admin/users/add" method="POST">
+  <p><label>Nama Lengkap</label><br><input type="text" name="nama_lengkap" required></p>
+  <p><label>Username</label><br><input type="text" name="username" required></p>
+  <p><label>Password</label><br><input type="password" name="password" required></p>
+  <p>
+    <label>Role</label><br>
+    <select name="role">
+      <option value="penulis">Penulis</option>
+      <option value="admin">Admin</option>
+      <option value="superadmin">Super Admin</option>
+    </select>
+  </p>
+  <button type="submit" class="btn-primary"><i class="fa fa-save"></i> Simpan</button>
+</form>

@@ -1,0 +1,76 @@
+
+<!-- Font Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+  integrity="sha512-sVvZ9tMmuZVb7hFSaNw6tKLMf5htLfsUwbg6OZo+U3xgBmfNqGrYzXhPC9U2rXZqDwU0GMWkTV6tFZ4p8mHzTA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
+
+<div class="card" style="margin:auto;background:white;padding:30px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.08);">
+  <h2 style="color:#004aad;font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+    <i class="fa-solid fa-pen-to-square"></i> Edit Artikel
+  </h2>
+
+  <form action="/admin/edit/<%= post.id %>" method="POST" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:15px;">
+    
+    <div>
+      <label><i class="fa-solid fa-heading"></i> Judul</label><br>
+      <input type="text" name="title" value="<%= post.title %>" required
+             style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+    </div>
+
+    <div>
+      <label><i class="fa-solid fa-align-left"></i> Subjudul</label><br>
+      <input type="text" name="subtitle" value="<%= post.subtitle %>"
+             style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+    </div>
+
+    <div>
+      <label><i class="fa-solid fa-file-lines"></i> Konten</label><br>
+      <textarea name="content" rows="10" required
+                style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;resize:vertical;"><%= post.content %></textarea>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+      <div>
+        <label><i class="fa-solid fa-tags"></i> Kategori</label><br>
+        <input type="text" name="category" value="<%= post.category %>"
+               style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+      </div>
+      <div>
+        <label><i class="fa-solid fa-hashtag"></i> Tag</label><br>
+        <input type="text" name="tags" value="<%= post.tags %>"
+               style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+      </div>
+    </div>
+
+    <div>
+      <label><i class="fa-solid fa-user"></i> Penulis</label><br>
+      <input type="text" name="author" value="<%= post.author_id %>"
+             style="width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;">
+    </div>
+
+    <div>
+      <label><i class="fa-solid fa-image"></i> Gambar Saat Ini</label><br>
+      <% if (post.image) { %>
+        <img src="<%= post.image %>" alt="Preview" style="width:150px;border-radius:6px;margin-top:6px;"><br>
+      <% } else { %>
+        <em style="color:#888;">Tidak ada gambar</em><br>
+      <% } %>
+      <input type="file" name="image" style="margin-top:8px;">
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+      <a href="/admin/dashboard"
+         style="background:#ccc;color:black;text-decoration:none;padding:10px 15px;border-radius:6px;display:flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-arrow-left"></i> Batal
+      </a>
+      <button type="submit"
+              style="background:#004aad;color:white;padding:10px 15px;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-floppy-disk"></i> Perbarui
+      </button>
+    </div>
+  </form>
+</div>

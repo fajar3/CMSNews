@@ -1,0 +1,44 @@
+<div class="top-actions" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+  <h2 style="color:#004aad;font-weight:600;font-size:1.5rem;display:flex;align-items:center;gap:8px;">
+    <i class="fa-solid fa-users"></i> Kelola Pengguna
+  </h2>
+  <a href="/admin/users/add"
+     style="background:#004aad;color:white;text-decoration:none;padding:10px 18px;border-radius:6px;font-weight:500;display:flex;align-items:center;gap:6px;">
+    <i class="fa-solid fa-user-plus"></i> Tambah Pengguna
+  </a>
+</div>
+
+<div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,0.1);">
+    <thead>
+      <tr style="background:#004aad;color:white;">
+        <th style="padding:12px 15px;text-align:left;">Username</th>
+        <th style="padding:12px 15px;text-align:left;">Role</th>
+        <th style="padding:12px 15px;text-align:left;">Tanggal</th>
+        <th style="padding:12px 15px;text-align:left;">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr style="border-bottom:1px solid #eee;">
+          <td style="padding:10px 15px;"><%= u.username %></td>
+          <td style="padding:10px 15px;"><%= u.role %></td>
+          <td style="padding:10px 15px;"><%= new Date(u.created_at).toLocaleDateString() %></td>
+          <td style="padding:10px 15px;display:flex;gap:8px;">
+            <% if (user.role === 'superadmin') { %>
+              <a href="/admin/users/edit/<%= u.id %>" 
+                 style="background:#007bff;color:white;padding:6px 10px;border-radius:5px;text-decoration:none;display:flex;align-items:center;gap:4px;font-size:0.9rem;">
+                 <i class="fa-solid fa-pen-to-square"></i> Edit
+              </a>
+              <a href="/admin/users/delete/<%= u.id %>" 
+                 onclick="return confirm('Hapus user ini?')" 
+                 style="background:#dc3545;color:white;padding:6px 10px;border-radius:5px;text-decoration:none;display:flex;align-items:center;gap:4px;font-size:0.9rem;">
+                 <i class="fa-solid fa-trash"></i> Hapus
+              </a>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

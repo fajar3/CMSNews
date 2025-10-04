@@ -1,0 +1,54 @@
+
+
+<div class="card">
+  <h2 style="margin-bottom:20px;">📝 Tambah Artikel Baru</h2>
+
+  <form action="/admin/add" method="POST" enctype="multipart/form-data">
+    <p>
+      <label>Judul</label>
+      <input type="text" name="title" required>
+    </p>
+
+    <p>
+      <label>Subjudul</label>
+      <input type="text" name="subtitle">
+    </p>
+
+    <p>
+      <label>Konten</label>
+      <textarea name="content" rows="10" required></textarea>
+    </p>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div>
+        <p>
+          <label>Kategori</label>
+          <input type="text" name="category">
+        </p>
+      </div>
+      <div>
+        <p>
+          <label>Tag (pisahkan dengan koma)</label>
+          <input type="text" name="tags">
+        </p>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+      <div>
+        <p>
+          <label>Penulis</label>
+          <input type="text" name="author">
+        </p>
+      </div>
+      <div>
+        <p>
+          <label>Gambar</label>
+          <input type="file" name="image">
+        </p>
+      </div>
+    </div>
+
+    <button type="submit">💾 Simpan</button>
+  </form>
+</div>

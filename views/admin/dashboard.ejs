@@ -1,0 +1,95 @@
+
+<!-- Font Awesome & Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="dashboard-container" style="padding:20px;">
+  <h2 style="display:flex;align-items:center;gap:10px;color:#004aad;">
+    <i class="fa-solid fa-chart-line"></i> Dashboard Admin
+  </h2>
+
+  <!-- Statistik Utama -->
+  <div class="stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px;">
+    <div class="card" style="background:#004aad;color:white;padding:20px;border-radius:10px;">
+      <i class="fa-solid fa-newspaper fa-2x"></i>
+      <h3><%= stats.totalPosts %></h3>
+      <p>Total Artikel</p>
+    </div>
+    <div class="card" style="background:#28a745;color:white;padding:20px;border-radius:10px;">
+      <i class="fa-solid fa-eye fa-2x"></i>
+      <h3><%= stats.totalViews %></h3>
+      <p>Total Kunjungan</p>
+    </div>
+    <div class="card" style="background:#ff9800;color:white;padding:20px;border-radius:10px;">
+      <i class="fa-solid fa-user-pen fa-2x"></i>
+      <h3><%= stats.totalAuthors %></h3>
+      <p>Total Penulis</p>
+    </div>
+  </div>
+
+  <!-- Grafik Kunjungan -->
+  <div class="chart-card" style="margin-top:30px;background:white;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);padding:20px;">
+    <h3 style="color:#004aad;margin-bottom:10px;"><i class="fa-solid fa-chart-area"></i> Grafik Kunjungan Mingguan</h3>
+    <canvas id="visitChart" height="100"></canvas>
+  </div>
+
+  <!-- Dua kolom: populer & terbaru -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px;">
+    
+    <!-- Artikel Terpopuler -->
+    <div class="card" style="background:white;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);">
+      <h3 style="color:#ff5722;margin-bottom:10px;"><i class="fa-solid fa-fire"></i> Artikel Terpopuler</h3>
+      <ul style="list-style:none;padding:0;margin:0;">
+        <% popularPosts.forEach(p => { %>
+          <li style="padding:8px 0;border-bottom:1px solid #eee;">
+            <strong><%= p.title %></strong><br>
+            <small><i class="fa-solid fa-eye"></i> <%= p.views %> kali dilihat</small>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <!-- Artikel Terbaru -->
+    <div class="card" style="background:white;padding:20px;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,0.1);">
+      <h3 style="color:#004aad;margin-bottom:10px;"><i class="fa-solid fa-clock-rotate-left"></i> Artikel Terbaru</h3>
+      <ul style="list-style:none;padding:0;margin:0;">
+        <% recentPosts.forEach(r => { %>
+          <li style="padding:8px 0;border-bottom:1px solid #eee;">
+            <strong><%= r.title %></strong><br>
+           <small><i class="fa-solid fa-user"></i> <%= r.author_name %> | <%= new Date(r.created_at).toLocaleDateString('id-ID') %></small>
+
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ctx = document.getElementById('visitChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: <%- JSON.stringify(visitData.labels) %>,
+      datasets: [{
+        label: 'Jumlah Kunjungan',
+        data: <%- JSON.stringify(visitData.values) %>,
+        borderColor: '#004aad',
+        backgroundColor: 'rgba(0,74,173,0.2)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5,
+        pointBackgroundColor: '#004aad'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
