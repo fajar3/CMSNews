@@ -1,6 +1,4 @@
-Oke, Fajar33! Saya buatkan versi **README.md** yang lebih modern, ringkas, dan profesional untuk proyek CMS kamu:
 
-````markdown
 # News CMS - Sistem Manajemen Artikel
 
 Sebuah **Content Management System (CMS)** sederhana untuk mengelola artikel, pengguna, dan dashboard admin.  
