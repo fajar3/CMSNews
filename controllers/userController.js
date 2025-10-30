@@ -3,13 +3,18 @@ const db = require('../db');
 
 // daftar user
 exports.list = async (req, res) => {
-  const [users] = await db.query('SELECT * FROM users');
-  res.render('admin/users', {
-    layout: 'layouts/admin',
-    users,
-    user: req.session.user,
-    active: 'users'
-  });
+  try {
+    const users = (await db.query('SELECT * FROM users')).rows;
+    res.render('admin/users', {
+      layout: 'layouts/admin',
+      users,
+      user: req.session.user,
+      active: 'users'
+    });
+  } catch (err) {
+    console.error(err);
+    res.send('Error loading users');
+  }
 };
 
 // form tambah user
@@ -24,25 +29,36 @@ exports.addPage = (req, res) => {
 // simpan user baru
 exports.addUser = async (req, res) => {
   const { username, password, nama_lengkap, role } = req.body;
-  const hash = await bcrypt.hash(password, 10);
-  await db.query('INSERT INTO users (username, password, nama_lengkap, role) VALUES (?, ?, ?, ?)',
-    [username, hash, nama_lengkap, role]);
-  res.redirect('/admin/users');
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    await db.query(
+      'INSERT INTO users (username, password, nama_lengkap, role) VALUES ($1, $2, $3, $4)',
+      [username, hash, nama_lengkap, role]
+    );
+    res.redirect('/admin/users');
+  } catch (err) {
+    console.error(err);
+    res.send('Error adding user');
+  }
 };
 
 // hapus user
 exports.deleteUser = async (req, res) => {
   const id = req.params.id;
-  await db.query('DELETE FROM users WHERE id = ?', [id]);
-  res.redirect('/admin/users');
+  try {
+    await db.query('DELETE FROM users WHERE id = $1', [id]);
+    res.redirect('/admin/users');
+  } catch (err) {
+    console.error(err);
+    res.send('Error deleting user');
+  }
 };
-// Halaman Edit User
 
-// Edit User Page
+// Halaman Edit User
 exports.editPage = async (req, res) => {
   const id = req.params.id;
   try {
-    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+    const rows = (await db.query('SELECT * FROM users WHERE id = $1', [id])).rows;
     if (rows.length === 0) return res.send('User tidak ditemukan');
 
     res.render('admin/edit-user', {
@@ -66,10 +82,16 @@ exports.updateUser = async (req, res) => {
     if (password && password.trim() !== '') {
       // hash password baru
       const hash = await bcrypt.hash(password, 10);
-      await db.query('UPDATE users SET username = ?, role = ?, password = ? WHERE id = ?', [username, role, hash, id]);
+      await db.query(
+        'UPDATE users SET username = $1, role = $2, password = $3 WHERE id = $4',
+        [username, role, hash, id]
+      );
     } else {
       // update tanpa mengubah password
-      await db.query('UPDATE users SET username = ?, role = ? WHERE id = ?', [username, role, id]);
+      await db.query(
+        'UPDATE users SET username = $1, role = $2 WHERE id = $3',
+        [username, role, id]
+      );
     }
     res.redirect('/admin/users');
   } catch (err) {

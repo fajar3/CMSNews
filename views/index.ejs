@@ -1,9 +1,9 @@
+<h1 class="text-center mb-4 display-6 fw-bold">
+  <i class="fa-solid fa-bolt text-primary me-2"></i>JALIBAR News
+</h1>
 
-
-<h1 class="text-center mb-4"><i class="fa-solid fa-bolt text-primary me-2"></i>Berita Terbaru</h1>
-
-<!-- Filter -->
-<form method="GET" action="/" class="row g-3 mb-4 bg-white p-3 rounded shadow-sm">
+<!-- Filter Form -->
+<form method="GET" action="/" class="row g-3 mb-4 p-3 rounded shadow-sm bg-white">
   <div class="col-md-4">
     <input type="text" name="search" class="form-control" placeholder="Cari berita..." value="<%= search || '' %>">
   </div>
@@ -24,18 +24,20 @@
     </select>
   </div>
   <div class="col-md-2 d-grid">
-    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-filter me-1"></i>Filter</button>
+    <button type="submit" class="btn btn-primary fw-semibold">
+      <i class="fa-solid fa-filter me-1"></i>Filter
+    </button>
   </div>
 </form>
 
 <div class="row">
   <!-- Daftar Berita -->
   <div class="col-lg-8">
-    <div class="row">
+    <div class="row g-4">
       <% if(posts && posts.length > 0){ %>
         <% posts.forEach(post => { %>
-          <div class="col-md-6 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
+          <div class="col-md-6">
+            <div class="card h-100 shadow-sm hover-shadow transition">
               <% if(post.image){ %>
                 <img src="<%= post.image %>" class="card-img-top" alt="<%= post.title %>">
               <% } %>
@@ -46,10 +48,10 @@
                   <i class="fa-solid fa-user me-1"></i><%= post.author %> • 
                   <i class="fa-regular fa-calendar me-1"></i><%= new Date(post.created_at).toLocaleDateString() %>
                 </p>
-                <p class="card-text"><%= post.content.substring(0,100) %>...</p>
+                <p class="card-text text-truncate"><%= post.content %></p>
               </div>
-              <div class="card-footer bg-white border-0 text-end">
-                <a href="/post/<%= post.slug %>" class="btn btn-outline-primary btn-sm">
+              <div class="card-footer bg-light text-end border-0">
+                <a href="/post/<%= post.slug %>" class="btn btn-outline-primary btn-sm fw-semibold">
                   Baca Selengkapnya <i class="fa-solid fa-arrow-right-long ms-1"></i>
                 </a>
               </div>
@@ -62,23 +64,48 @@
     </div>
 
     <!-- Pagination -->
-    <nav aria-label="Halaman">
-      <ul class="pagination justify-content-center mt-4">
-        <% for(let i=1; i<=totalPages; i++){ %>
-          <li class="page-item <%= i===page ? 'active' : '' %>">
-            <a class="page-link" href="?page=<%= i %>&search=<%= search %>&category=<%= selectedCategory %>"><%= i %></a>
-          </li>
-        <% } %>
-      </ul>
-    </nav>
+    <!-- Pagination -->
+<nav aria-label="Halaman">
+  <ul class="pagination justify-content-center mt-4">
+    <% 
+      const visiblePages = 5; // maksimal link yang terlihat
+      let startPage = Math.max(1, page - Math.floor(visiblePages/2));
+      let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+      if (endPage - startPage + 1 < visiblePages) {
+        startPage = Math.max(1, endPage - visiblePages + 1);
+      }
+    %>
+
+    <% if(page > 1){ %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= page-1 %>&search=<%= search %>&category=<%= selectedCategory %>&tag=<%= selectedTag %>">«</a>
+      </li>
+    <% } %>
+
+    <% for(let i=startPage; i<=endPage; i++){ %>
+      <li class="page-item <%= i===page ? 'active' : '' %>">
+        <a class="page-link" href="?page=<%= i %>&search=<%= search %>&category=<%= selectedCategory %>&tag=<%= selectedTag %>"><%= i %></a>
+      </li>
+    <% } %>
+
+    <% if(page < totalPages){ %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= page+1 %>&search=<%= search %>&category=<%= selectedCategory %>&tag=<%= selectedTag %>">»</a>
+      </li>
+    <% } %>
+  </ul>
+</nav>
+
   </div>
 
   <!-- Sidebar Trending -->
   <div class="col-lg-4">
     <div class="bg-white p-3 rounded shadow-sm sticky-top" style="top: 1rem;">
-      <h4 class="fw-bold border-bottom pb-2 mb-3"><i class="fa-solid fa-fire text-danger me-2"></i>Trending</h4>
+      <h4 class="fw-bold border-bottom pb-2 mb-3">
+        <i class="fa-solid fa-fire text-danger me-2"></i>Trending
+      </h4>
       <% trending.forEach(tr => { %>
-        <div class="mb-3 border-bottom pb-2">
+        <div class="mb-3 pb-2 border-bottom hover-bg p-2 rounded transition">
           <a href="/post/<%= tr.slug %>" class="text-decoration-none text-dark fw-semibold d-block mb-1">
             <%= tr.title %>
           </a>
@@ -88,3 +115,22 @@
     </div>
   </div>
 </div>
+
+<style>
+.hover-shadow:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+.transition {
+  transition: all 0.25s ease-in-out;
+}
+.text-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.hover-bg:hover {
+  background-color: #f8f9fa;
+}
+</style>

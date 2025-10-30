@@ -7,12 +7,12 @@ const db = require('./db');
 const app = express();
 const PORT = 3000;
 
-// Middleware dasar
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Setup EJS
+// EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(expressLayouts);
@@ -25,7 +25,7 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// Middleware global
+// Global middleware
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.title = 'News CMS';
@@ -40,7 +40,8 @@ const postRoutes = require('./routes/posts');
 app.use('/', authRoutes);
 app.use('/admin', adminRoutes);
 app.use('/api/posts', postRoutes);
-// === Homepage ===
+
+// Homepage
 app.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -51,52 +52,51 @@ app.get('/', async (req, res) => {
     const conditions = [];
     const params = [];
 
-    // Pencarian
+    // Search
     if (req.query.search) {
-      conditions.push('(title LIKE ? OR subtitle LIKE ? OR content LIKE ?)');
-      params.push(`%${req.query.search}%`, `%${req.query.search}%`, `%${req.query.search}%`);
+      const term = `%${req.query.search}%`;
+      conditions.push(`(title ILIKE $${params.length + 1} OR subtitle ILIKE $${params.length + 2} OR content ILIKE $${params.length + 3})`);
+      params.push(term, term, term);
     }
 
-    // Filter kategori
+    // Category filter
     if (req.query.category) {
-      conditions.push('category = ?');
+      conditions.push(`category = $${params.length + 1}`);
       params.push(req.query.category);
     }
 
-    // Filter tag
+    // Tag filter
     if (req.query.tag) {
-      conditions.push('FIND_IN_SET(?, tags)');
-      params.push(req.query.tag);
+      conditions.push(`tags ILIKE $${params.length + 1}`);
+      params.push(`%${req.query.tag}%`);
     }
 
     if (conditions.length > 0) sql += ' WHERE ' + conditions.join(' AND ');
-    sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    sql += ` ORDER BY created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
     params.push(limit, offset);
 
-    const [posts] = await db.query(sql, params);
+    const posts = (await db.query(sql, params)).rows;
 
-    // Hitung total post
-    let countSql = 'SELECT COUNT(*) as total FROM posts';
+    // Total pages
+    let countSql = 'SELECT COUNT(*) AS total FROM posts';
     if (conditions.length > 0) countSql += ' WHERE ' + conditions.join(' AND ');
-    const [countRows] = await db.query(countSql, params.slice(0, params.length - 2));
+    const countRows = (await db.query(countSql, params.slice(0, params.length - 2))).rows;
     const totalPages = Math.ceil(countRows[0].total / limit);
 
-    // Ambil kategori unik
-    const [allCategories] = await db.query('SELECT DISTINCT category FROM posts WHERE category IS NOT NULL');
-    const categories = allCategories.map(p => p.category);
+    // Categories
+    const categories = (await db.query('SELECT DISTINCT category FROM posts WHERE category IS NOT NULL')).rows.map(r => r.category);
 
-    // Ambil tag unik
-    const [allTags] = await db.query('SELECT tags FROM posts WHERE tags IS NOT NULL');
+    // Tags
+    const allTags = (await db.query('SELECT tags FROM posts WHERE tags IS NOT NULL')).rows;
     let tags = [];
     allTags.forEach(p => {
       if (p.tags) tags.push(...p.tags.split(',').map(t => t.trim()));
     });
     tags = [...new Set(tags)];
 
-    // Trending (berdasarkan views)
-    const [trending] = await db.query('SELECT * FROM posts ORDER BY views DESC LIMIT 5');
+    // Trending
+    const trending = (await db.query('SELECT * FROM posts ORDER BY views DESC LIMIT 5')).rows;
 
-    // Render halaman utama
     res.render('index', {
       title: 'Berita Terbaru',
       layout: 'layouts/main',
@@ -117,32 +117,26 @@ app.get('/', async (req, res) => {
   }
 });
 
-// === Detail Post ===
-// === Detail Post ===
+// Detail Post
 app.get('/post/:slug', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM posts WHERE slug=?', [req.params.slug]);
+    const rows = (await db.query('SELECT * FROM posts WHERE slug=$1', [req.params.slug])).rows;
     if (rows.length === 0) return res.send('Post not found');
     const post = rows[0];
 
-    // Update views
-    await db.query('UPDATE posts SET views=views+1 WHERE id=?', [post.id]);
+    await db.query('UPDATE posts SET views = views + 1 WHERE id = $1', [post.id]);
 
-    // Related posts
     let relatedPosts = [];
     if (post.category) {
-      const [related] = await db.query(
-        'SELECT * FROM posts WHERE category=? AND id!=? ORDER BY created_at DESC LIMIT 4',
+      relatedPosts = (await db.query(
+        'SELECT * FROM posts WHERE category=$1 AND id != $2 ORDER BY created_at DESC LIMIT 4',
         [post.category, post.id]
-      );
-      relatedPosts = related;
+      )).rows;
     }
 
-    // ✅ Tambahkan ini biar trending ada juga di halaman post
-    const [trending] = await db.query('SELECT * FROM posts ORDER BY views DESC LIMIT 5');
+    const trending = (await db.query('SELECT * FROM posts ORDER BY views DESC LIMIT 5')).rows;
 
-    // Render ke EJS
-    res.render('post', { 
+    res.render('post', {
       title: post.title,
       layout: 'layouts/main',
       post,
@@ -156,6 +150,5 @@ app.get('/post/:slug', async (req, res) => {
   }
 });
 
-
-// === Jalankan Server ===
+// Start server
 app.listen(PORT, () => console.log(`✅ Server running at http://localhost:${PORT}`));

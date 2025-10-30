@@ -1,0 +1,240 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict 7pDCvc5L9FRYTBahab0Er5j3ocBdvXx5KHufDAvpbjOHZVSVoQEraBh5z89ypn4
+
+-- Dumped from database version 14.19 (Ubuntu 14.19-0ubuntu0.22.04.1)
+-- Dumped by pg_dump version 14.19 (Ubuntu 14.19-0ubuntu0.22.04.1)
+
+-- Started on 2025-10-21 12:29:00 WIB
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 212 (class 1259 OID 18126)
+-- Name: posts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.posts (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    subtitle character varying(255),
+    content text NOT NULL,
+    image character varying(255),
+    author_id integer,
+    category character varying(50),
+    tags text,
+    slug character varying(255) NOT NULL,
+    views integer DEFAULT 0,
+    created_at timestamp without time zone DEFAULT now(),
+    updated_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.posts OWNER TO postgres;
+
+--
+-- TOC entry 211 (class 1259 OID 18125)
+-- Name: posts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.posts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.posts_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3500 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: posts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.posts_id_seq OWNED BY public.posts.id;
+
+
+--
+-- TOC entry 210 (class 1259 OID 18115)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    username character varying(50) NOT NULL,
+    password character varying(255) NOT NULL,
+    role character varying(20) DEFAULT 'user'::character varying NOT NULL,
+    nama_lengkap character varying(100),
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.users OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 18114)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3501 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- TOC entry 3339 (class 2604 OID 18129)
+-- Name: posts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts ALTER COLUMN id SET DEFAULT nextval('public.posts_id_seq'::regclass);
+
+
+--
+-- TOC entry 3336 (class 2604 OID 18118)
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- TOC entry 3494 (class 0 OID 18126)
+-- Dependencies: 212
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.posts (id, title, subtitle, content, image, author_id, category, tags, slug, views, created_at, updated_at) FROM stdin;
+2	Apple Vision Pro M5: Pembaruan Terbaru dengan Chip M5	Apple memperkenalkan model terbaru dari Vision Pro dengan chip M5 dan peningkatan performa.	Apple Vision Pro M5 diluncurkan pada 15 Oktober 2025 dengan performa meningkat dan micro-OLED 120Hz.	/uploads/image2.jpg	3	Teknologi	tech,AI	berita-teknologi-2	334	2025-10-19 12:07:23.615274	2025-10-21 12:07:23.615274
+3	Jupiter: Superkomputer Eropa dengan Kekuatan AI Terbesar	Jupiter menjadi superkomputer tercepat di Eropa dengan kemampuan AI exascale.	Superkomputer Jupiter di Jerman siap mendukung penelitian ilmiah dan AI exascale dengan 793.4 petaFLOPS.	/uploads/image3.jpg	4	Teknologi	tech,AI	berita-teknologi-3	353	2025-10-18 12:07:23.615274	2025-10-21 12:07:23.615274
+4	Apple CarPlay Ultra: Integrasi Layar Penuh di Mobil	Apple memperkenalkan CarPlay Ultra dengan integrasi layar penuh di kendaraan.	CarPlay Ultra memungkinkan integrasi penuh dengan layar instrumen kendaraan, memberikan kontrol intuitif.	/uploads/image4.jpg	5	Teknologi	tech,AI	berita-teknologi-4	863	2025-10-17 12:07:23.615274	2025-10-21 12:07:23.615274
+5	MediaTek Dimensity 9500: Chipset AI untuk Smartphone 5G	MediaTek meluncurkan Dimensity 9500 dengan peningkatan performa dan efisiensi AI.	Dimensity 9500 mendukung performa gaming dan aplikasi AI di smartphone 5G terbaru.	/uploads/image5.jpg	1	Teknologi	tech,AI	berita-teknologi-5	951	2025-10-16 12:07:23.615274	2025-10-21 12:07:23.615274
+6	Tesla Luncurkan FSD Beta 15.0 dengan Navigasi Lanjutan	Tesla memperbarui FSD Beta 15.0 dengan fitur navigasi lebih akurat.	Tesla FSD Beta 15.0 memperbarui kemampuan navigasi dan meningkatkan keselamatan berkendara.	/uploads/image6.jpg	2	Teknologi	tech,AI	berita-teknologi-6	473	2025-10-15 12:07:23.615274	2025-10-21 12:07:23.615274
+7	NVIDIA GH200 Resmi Dirilis untuk AI Generatif Skala Besar	NVIDIA GH200 ditujukan untuk pelatihan model AI generatif skala besar.	NVIDIA GH200 ditujukan untuk model AI generatif besar, mempercepat training hingga 2x lipat.	/uploads/image7.jpg	3	Teknologi	tech,AI	berita-teknologi-7	997	2025-10-14 12:07:23.615274	2025-10-21 12:07:23.615274
+8	Samsung Galaxy Z Fold 6 Hadir dengan Layar Baru	Samsung Galaxy Z Fold 6 hadir dengan layar lipat terbaru dan teknologi kamera canggih.	Samsung Galaxy Z Fold 6 menawarkan layar lipat baru, kamera lebih baik, dan performa tinggi.	/uploads/image8.jpg	4	Teknologi	tech,AI	berita-teknologi-8	228	2025-10-13 12:07:23.615274	2025-10-21 12:07:23.615274
+9	Google Bard Dapatkan Pembaruan Kemampuan Coding AI	Google Bard kini mendukung penulisan kode dan debugging AI.	Google Bard kini dapat menulis kode, debug, dan membantu pengembangan software AI.	/uploads/image9.jpg	5	Teknologi	tech,AI	berita-teknologi-9	790	2025-10-12 12:07:23.615274	2025-10-21 12:07:23.615274
+10	Intel Arc GPU Terbaru Tembus Pasar Gaming High-End	Intel Arc GPU terbaru siap bersaing di segmen gaming high-end.	Intel Arc GPU terbaru hadir dengan performa tinggi untuk gaming dan grafis kreatif.	/uploads/image10.jpg	1	Teknologi	tech,AI	berita-teknologi-10	714	2025-10-11 12:07:23.615274	2025-10-21 12:07:23.615274
+1	Zenfone 12 Ultra: Ponsel AI Terbaru dari ASUS	ASUS meluncurkan Zenfone 12 Ultra dengan chip Snapdragon 8 Elite dan fitur AI canggih.	Zenfone 12 Ultra dirilis pada 6 Februari 2025, ditenagai chip Snapdragon 8 Elite dan fitur AI kamera mutakhir.	/uploads/image1.jpg	2	Teknologi	tech,AI	berita-teknologi-1	359	2025-10-20 12:07:23.615274	2025-10-21 12:07:23.615274
+11	Boyot Samrun (Mbah Gabuk) 1852 hingga Generasi Pelestari Jejak Jaranan Jenggolo Kepanjen Malang	Said Abdullah, S.I.P. menceritakan sejarah panjang Jaranan Jenggolo, kesenian yang diwariskan sejak tahun 1852 dan masih bertahan hingga kini di Malang.	Budaya Jaranan Jenggolo ternyata menyimpan sejarah panjang sejak abad ke-19. Menurut Said Abdullah, S.I.P., kesenian ini sudah hidup sejak tahun 1852, jauh sebelum Indonesia merdeka. “Jaranan, topeng, hingga pencak juga Jenggolo,” ujarnya.\r\n\r\nTak hanya jaranan, juga dikenal sebagai pusat beragam kesenian rakyat mulai dari wayang, topeng, kuda lumping, reog, hingga pencak silat. Semua berkembang seiring zaman, meski banyak pula yang mulai tergerus perubahan. “Generasi kan terus berganti, tetapi saksi hidupnya masih ada yang bisa bercerita,” tutur Said.\r\n\r\nMenurutnya, legalitas kelompok kesenian baru muncul setelah kemerdekaan. Sebelum itu, kesenian hanya diwariskan dari generasi ke generasi tanpa nomor induk organisasi. “Dulu tidak ada legalitas, yang penting berkesenian. Baru setelah merdeka, muncul nama – nama salah satunya Turonggo Seto,” kata Said Abdullah.\r\n\r\nSaid Abdullah menegaskan bahwa Jenggolo memiliki peran penting dalam sejarah budaya Jawa Timur. Ia meluruskan bahwa Jenggolo bukanlah sebuah kerajaan, melainkan keraton atau pusat kebudayaan. “Kalau kerajaan itu ada di Mojokerto, di sini adalah Kraton Jenggolo,” jelasnya.\r\n\r\nBukti peninggalan keraton masih bisa dilihat hingga sekarang, salah satunya pada situs umpak di kawasan setempat. Bagi Said Abdullah, hal itu menguatkan bahwa Jenggolo adalah pusat budaya yang tidak bisa disamakan dengan wilayah lain. “Itu memang asli dari sini, bukan dari mana-mana,” ucapnya.\r\n\r\nMeski demikian, jaranan Jenggolo saat ini sudah sulit ditemui dalam bentuk aslinya. Beberapa kelompok hanya mempertahankan sedikit unsur tradisi, sementara sisanya berkembang menjadi jaranan kreasi. “Pelestariannya sekarang malah ada di Donomulyo, karena murid-murid dari Jenggolo justru membawa ilmu ke sana,” ungkap Said Abdullah.\r\n\r\nSelain jaranan, ia juga menyinggung bantengan yang kini populer sebagai kesenian tersendiri. Menurutnya, bantengan sejatinya hanyalah bagian dari pencak silat atau jaranan. “Mana ada kesenian bantengan? Seharusnya itu pelengkap dari pencak silat dan jaranan,” tutup Said dengan tegas.	/uploads/jgl.jpg	1	Budaya	budaya,jaranan,jenggolo	boyot-samrun-mbah-gabuk-1852-jaranan-jenggolo-malang	3	2025-10-21 12:07:31.886653	2025-10-21 12:08:12.645133
+\.
+
+
+--
+-- TOC entry 3492 (class 0 OID 18115)
+-- Dependencies: 210
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.users (id, username, password, role, nama_lengkap, created_at) FROM stdin;
+1	admin	$2a$12$hVz6uvsMONk.KlzB.cJaX.hTJhjyJgiAVya8bn8pRneixnWwZSt.G	admin	Administrator	2025-10-21 09:53:50.547419
+2	editor	$2a$12$hVz6uvsMONk.KlzB.cJaX.hTJhjyJgiAVya8bn8pRneixnWwZSt.G	editor	Editor One	2025-10-21 09:53:50.547419
+3	user1	$$2a$12$hVz6uvsMONk.KlzB.cJaX.hTJhjyJgiAVya8bn8pRneixnWwZSt.G	user	User One	2025-10-21 09:53:50.547419
+4	user2	$2a$12$hVz6uvsMONk.KlzB.cJaX.hTJhjyJgiAVya8bn8pRneixnWwZSt.G	user	User Two	2025-10-21 09:53:50.547419
+5	user3	$2a$12$hVz6uvsMONk.KlzB.cJaX.hTJhjyJgiAVya8bn8pRneixnWwZSt.G	user	User Three	2025-10-21 09:53:50.547419
+6	superadmin	$2a$12$hVz6uvsMONk.KlzB.cJaX.hTJhjyJgiAVya8bn8pRneixnWwZSt.G	superadmin	Super Administrator	2025-10-21 12:19:34.433464
+\.
+
+
+--
+-- TOC entry 3502 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.posts_id_seq', 11, true);
+
+
+--
+-- TOC entry 3503 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 6, true);
+
+
+--
+-- TOC entry 3348 (class 2606 OID 18136)
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3350 (class 2606 OID 18138)
+-- Name: posts posts_slug_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_slug_key UNIQUE (slug);
+
+
+--
+-- TOC entry 3344 (class 2606 OID 18122)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3346 (class 2606 OID 18124)
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- TOC entry 3351 (class 2606 OID 18139)
+-- Name: posts posts_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_author_id_fkey FOREIGN KEY (author_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+-- Completed on 2025-10-21 12:29:00 WIB
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict 7pDCvc5L9FRYTBahab0Er5j3ocBdvXx5KHufDAvpbjOHZVSVoQEraBh5z89ypn4
+

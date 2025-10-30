@@ -10,7 +10,9 @@ exports.loginPage = (req, res) => {
 exports.login = async (req, res) => {
   const { username, password } = req.body;
   try {
-    const [rows] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+    const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+    const rows = result.rows;
+
     if (rows.length === 0) {
       return res.render('login', { title: 'Login - News CMS', error: 'Username atau password salah' });
     }
@@ -25,7 +27,7 @@ exports.login = async (req, res) => {
     req.session.user = {
       id: user.id,
       username: user.username,
-      role: user.role,           // wajib untuk middleware role
+      role: user.role,
       nama_lengkap: user.nama_lengkap
     };
 
@@ -46,14 +48,16 @@ exports.registerPage = (req, res) => {
 exports.register = async (req, res) => {
   const { username, password, role, nama_lengkap } = req.body;
   try {
-    const [exists] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+    const existsResult = await db.query('SELECT * FROM users WHERE username = $1', [username]);
+    const exists = existsResult.rows;
+
     if (exists.length > 0) {
       return res.render('register', { title: 'Register - News CMS', error: 'Username sudah digunakan' });
     }
 
     const hash = await bcrypt.hash(password, 10);
     await db.query(
-      'INSERT INTO users (username, password, role, nama_lengkap) VALUES (?, ?, ?, ?)',
+      'INSERT INTO users (username, password, role, nama_lengkap) VALUES ($1, $2, $3, $4)',
       [username, hash, role, nama_lengkap]
     );
 

@@ -1,10 +1,13 @@
-const mysql = require('mysql2/promise');
+// db.js
+const { Pool } = require('pg');
 
-const pool = mysql.createPool({
+// Konfigurasi koneksi ke PostgreSQL
+const pool = new Pool({
   host: 'localhost',
-  user: 'root',       // ganti sesuai user mysql
-  password: 'hexa',       // ganti sesuai password mysql
-  database: 'news_app'
+  user: 'postgres',      // ganti dengan user PostgreSQL kamu
+  password: 'postgres',      // ganti dengan password PostgreSQL kamu
+  database: 'news_app',  // nama database
+  port: 5432,            // default port PostgreSQL
 });
 
 module.exports = pool;
