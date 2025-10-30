@@ -291,6 +291,10 @@ textarea {
   }
 }
 </style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" integrity="sha512-OA+dz17/7HG3pAQl7lsc6Z1++WlEJp0+N3svGuwM/6ZUM9gHMe5M3MJtrV4zLhSx6uvzkt4P3KmP0Vci41nFbw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-5+4PKJhoxG38wnScOW7u1Ch7p8aY4+8+X+ayZ5rX4lQ8vT0mMPSl1VtX9kHB+K2N2YyC1gdx8i0BTh9oHeS/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <div class="card">
       <div class="card-header">
         <h2><i class="fa-solid fa-pen-to-square"></i> Edit Artikel</h2>
@@ -329,84 +333,146 @@ textarea {
           <input type="text" id="author" name="author" value="<%= post.author_id %>">
         </div>
 
-        <div class="form-group">
-          <label><i class="fa-solid fa-image"></i> Gambar</label>
-          <div class="image-container">
-            <div class="current-image">
-              <% if (post.image) { %>
-                <img src="<%= post.image %>" alt="Current Image" id="currentImage">
-              <% } else { %>
-                <div class="no-image">
-                  <i class="fa-solid fa-image"></i>
-                  <span>Tidak ada gambar</span>
-                </div>
-              <% } %>
+         <div class="form-group">
+      <label><i class="fa-solid fa-image"></i> Gambar</label>
+      <div class="image-container">
+        <div class="current-image">
+          <% if (post.image) { %>
+            <img src="<%= post.image %>" alt="Current Image" id="currentImage">
+          <% } else { %>
+            <div class="no-image">
+              <i class="fa-solid fa-image"></i>
+              <span>Tidak ada gambar</span>
             </div>
-            
-            <div class="file-upload">
-              <input type="file" id="image" name="image" class="file-input">
-              <label for="image" class="file-label">
-                <i class="fa-solid fa-cloud-upload-alt"></i>
-                <span>Pilih Gambar Baru</span>
-              </label>
-            </div>
-            
-            <div class="image-preview" id="imagePreview" style="display: none;">
-              <div class="preview-header">
-                <h4>Pratinjau Gambar Baru</h4>
-                <button type="button" id="removeImage" class="remove-btn">
-                  <i class="fa-solid fa-times"></i>
-                </button>
-              </div>
-              <img id="previewImg" src="" alt="Preview">
-            </div>
-          </div>
+          <% } %>
         </div>
 
-        <div class="form-actions">
-          <a href="/admin/dashboard" class="btn-cancel">
-            <i class="fa-solid fa-arrow-left"></i> Batal
-          </a>
-          <button type="submit" class="btn-submit">
-            <i class="fa-solid fa-floppy-disk"></i> Perbarui
-          </button>
+        <div class="file-upload">
+          <input type="file" id="image" name="image" class="file-input" accept="image/*">
+          <label for="image" class="file-label">
+            <i class="fa-solid fa-cloud-upload-alt"></i>
+            <span>Pilih Gambar Baru</span>
+          </label>
         </div>
-      </form>
+
+        <div class="image-preview" id="imagePreview" style="display: none;">
+          <div class="preview-header">
+            <h4>Pratinjau Gambar Baru</h4>
+            <button type="button" id="removeImage" class="remove-btn">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+          <img id="previewImg" src="" alt="Preview">
+        </div>
+      </div>
     </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const imageInput = document.getElementById('image');
-      const imagePreview = document.getElementById('imagePreview');
-      const previewImg = document.getElementById('previewImg');
-      const removeImageBtn = document.getElementById('removeImage');
-      const fileLabel = document.querySelector('.file-label span');
-      
-      // Fungsi untuk menampilkan pratinjau gambar
-      imageInput.addEventListener('change', function() {
-        const file = this.files[0];
-        
-        if (file) {
-          const reader = new FileReader();
-          
-          reader.addEventListener('load', function() {
-            previewImg.setAttribute('src', this.result);
-            imagePreview.style.display = 'block';
-            fileLabel.textContent = file.name;
-          });
-          
-          reader.readAsDataURL(file);
-        } else {
-          imagePreview.style.display = 'none';
-          fileLabel.textContent = 'Pilih Gambar Baru';
-        }
-      });
-      
-      // Fungsi untuk menghapus gambar yang dipilih
-      removeImageBtn.addEventListener('click', function() {
-        imageInput.value = '';
-        imagePreview.style.display = 'none';
-        fileLabel.textContent = 'Pilih Gambar Baru';
-      });
+    <div class="form-actions">
+      <a href="/admin/dashboard" class="btn-cancel">
+        <i class="fa-solid fa-arrow-left"></i> Batal
+      </a>
+      <button type="submit" class="btn-submit">
+        <i class="fa-solid fa-floppy-disk"></i> Perbarui
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Modal Crop Gambar -->
+<!-- Cropper.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<!-- Modal Crop -->
+<div id="cropModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.7);
+  justify-content:center; align-items:center;
+  z-index:9999;
+">
+  <div style="background:#fff; padding:1rem; border-radius:8px; max-width:700px; width:90%; max-height:90%; overflow:auto;">
+    <h3>Crop Gambar</h3>
+    <div style="width:100%; max-height:400px; overflow:hidden;">
+      <img id="cropImage" src="" style="width:100%;">
+    </div>
+    <div style="margin-top:1rem; text-align:right;">
+      <button id="cancelCrop" class="btn-cancel">Batal</button>
+      <button id="confirmCrop" class="btn-submit">Simpan Crop</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const imageInput = document.getElementById('image');
+  const cropModal = document.getElementById('cropModal');
+  const cropImage = document.getElementById('cropImage');
+  const confirmCrop = document.getElementById('confirmCrop');
+  const cancelCrop = document.getElementById('cancelCrop');
+  const previewImg = document.getElementById('previewImg');
+  const imagePreview = document.getElementById('imagePreview');
+  const removeImageBtn = document.getElementById('removeImage');
+  const fileLabel = document.querySelector('.file-label span');
+  let cropper;
+
+  imageInput.addEventListener('change', () => {
+    const file = imageInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      cropImage.src = e.target.result;
+      cropModal.style.display = 'flex';
+      if (cropper) cropper.destroy();
+
+      // Delay inisialisasi cropper sampai gambar ter-render
+      cropImage.onload = () => {
+        cropper = new Cropper(cropImage, {
+          aspectRatio: 16 / 9,
+          viewMode: 1,
+          autoCropArea: 1,
+          responsive: true,
+          background: false,
+          movable: true,
+          zoomable: true,
+          rotatable: false,
+          scalable: false
+        });
+      };
+    };
+    reader.readAsDataURL(file);
+  });
+
+  confirmCrop.addEventListener('click', () => {
+    if (!cropper) return;
+    cropper.getCroppedCanvas({ width: 800, height: 450 }).toBlob(blob => {
+      const newFile = new File([blob], imageInput.files[0].name, { type: 'image/png' });
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(newFile);
+      imageInput.files = dataTransfer.files;
+
+      previewImg.src = URL.createObjectURL(blob);
+      imagePreview.style.display = 'block';
+      fileLabel.textContent = newFile.name;
+
+      cropper.destroy();
+      cropModal.style.display = 'none';
     });
-  </script>
+  });
+
+  cancelCrop.addEventListener('click', () => {
+    if (cropper) cropper.destroy();
+    cropModal.style.display = 'none';
+    imageInput.value = '';
+  });
+
+  removeImageBtn.addEventListener('click', () => {
+    imageInput.value = '';
+    imagePreview.style.display = 'none';
+    fileLabel.textContent = 'Pilih Gambar Baru';
+  });
+});
+</script>
