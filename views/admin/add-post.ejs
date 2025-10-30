@@ -1,54 +1,456 @@
+<style>
+  :root {
+  --primary-color: #4a6cf7;
+  --primary-hover: #3a5ce5;
+  --secondary-color: #6c757d;
+  --secondary-hover: #5a6268;
+  --text-color: #333;
+  --text-muted: #6c757d;
+  --border-color: #e1e5eb;
+  --background-color: #f8f9fa;
+  --card-bg: #ffffff;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease-in-out;
+}
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-<div class="card">
-  <h2 style="margin-bottom:20px;">📝 Tambah Artikel Baru</h2>
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  background-image: radial-gradient(circle at 10% 20%, rgba(74, 108, 247, 0.05) 0%, rgba(255, 255, 255, 0) 90%);
+}
 
-  <form action="/admin/add" method="POST" enctype="multipart/form-data">
-    <p>
-      <label>Judul</label>
-      <input type="text" name="title" required>
-    </p>
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
 
-    <p>
-      <label>Subjudul</label>
-      <input type="text" name="subtitle">
-    </p>
+.card {
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: var(--transition);
+  border: 1px solid rgba(74, 108, 247, 0.1);
+}
 
-    <p>
-      <label>Konten</label>
-      <textarea name="content" rows="10" required></textarea>
-    </p>
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-      <div>
-        <p>
-          <label>Kategori</label>
-          <input type="text" name="category">
-        </p>
+.card-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(74, 108, 247, 0.03);
+}
+
+.card-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card-header h2 i {
+  color: var(--primary-color);
+}
+
+.form-container {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.input-with-icon, .textarea-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon i, .textarea-with-icon i {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-muted);
+  transition: var(--transition);
+  z-index: 1;
+}
+
+.textarea-with-icon {
+  align-items: flex-start;
+}
+
+.textarea-with-icon i {
+  top: 0.75rem;
+}
+
+.input-with-icon.focused i, .textarea-with-icon.focused i {
+  color: var(--primary-color);
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: #fff;
+}
+
+textarea {
+  padding-left: 2.5rem;
+  resize: vertical;
+  min-height: 200px;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
+
+.file-input-container {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.file-input {
+  position: absolute;
+  left: -9999px;
+}
+
+.file-input-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.file-input-label:hover {
+  background-color: rgba(74, 108, 247, 0.05);
+  border-color: var(--primary-color);
+}
+
+.file-input-label i {
+  color: var(--primary-color);
+}
+
+.image-preview-container {
+  margin-top: 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.image-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: rgba(74, 108, 247, 0.05);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.image-preview-header h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.image-preview-header h3 i {
+  color: var(--primary-color);
+}
+
+.remove-image-btn {
+  background: none;
+  border: none;
+  color: var(--secondary-color);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.remove-image-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.image-preview {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 6px rgba(74, 108, 247, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(74, 108, 247, 0.3);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: var(--secondary-color);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+</style>
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-pen-to-square"></i> Tambah Artikel Baru</h2>
       </div>
-      <div>
-        <p>
-          <label>Tag (pisahkan dengan koma)</label>
-          <input type="text" name="tags">
-        </p>
-      </div>
+
+      <form action="/admin/add" method="POST" enctype="multipart/form-data" class="form-container">
+        <div class="form-group">
+          <label for="title">Judul</label>
+          <div class="input-with-icon">
+            <i class="fas fa-heading"></i>
+            <input type="text" id="title" name="title" required placeholder="Masukkan judul artikel">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="subtitle">Subjudul</label>
+          <div class="input-with-icon">
+            <i class="fas fa-text-height"></i>
+            <input type="text" id="subtitle" name="subtitle" placeholder="Masukkan subjudul artikel">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="content">Konten</label>
+          <div class="textarea-with-icon">
+            <i class="fas fa-align-left"></i>
+            <textarea id="content" name="content" rows="10" required placeholder="Tulis konten artikel di sini..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Kategori</label>
+            <div class="input-with-icon">
+              <i class="fas fa-folder"></i>
+              <input type="text" id="category" name="category" placeholder="Contoh: Teknologi">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="tags">Tag (pisahkan dengan koma)</label>
+            <div class="input-with-icon">
+              <i class="fas fa-tags"></i>
+              <input type="text" id="tags" name="tags" placeholder="Contoh: web, javascript, tutorial">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="author">Penulis</label>
+            <div class="input-with-icon">
+              <i class="fas fa-user"></i>
+              <input type="text" id="author" name="author" placeholder="Nama penulis">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="image">Gambar</label>
+            <div class="file-input-container">
+              <input type="file" id="image" name="image" class="file-input" accept="image/*">
+              <label for="image" class="file-input-label">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Pilih Gambar</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="image-preview-container" id="imagePreviewContainer" style="display: none;">
+          <div class="image-preview-header">
+            <h3><i class="fas fa-image"></i> Pratinjau Gambar</h3>
+            <button type="button" class="remove-image-btn" id="removeImageBtn">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="image-preview">
+            <img id="imagePreview" src="" alt="Pratinjau Gambar">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i>
+            <span>Post Artikel</span>
+          </button>
+          <a href="/admin" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i>
+            <span>Batal</span>
+          </a>
+        </div>
+      </form>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-      <div>
-        <p>
-          <label>Penulis</label>
-          <input type="text" name="author">
-        </p>
-      </div>
-      <div>
-        <p>
-          <label>Gambar</label>
-          <input type="file" name="image">
-        </p>
-      </div>
-    </div>
-
-    <button type="submit">💾 Simpan</button>
-  </form>
-</div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageInput = document.getElementById('image');
+      const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+      const imagePreview = document.getElementById('imagePreview');
+      const removeImageBtn = document.getElementById('removeImageBtn');
+      const fileInputLabel = document.querySelector('.file-input-label span');
+      
+      // Fungsi untuk menampilkan pratinjau gambar
+      imageInput.addEventListener('change', function() {
+        const file = this.files[0];
+        
+        if (file) {
+          const reader = new FileReader();
+          
+          reader.addEventListener('load', function() {
+            imagePreview.setAttribute('src', this.result);
+            imagePreviewContainer.style.display = 'block';
+            fileInputLabel.textContent = file.name;
+          });
+          
+          reader.readAsDataURL(file);
+        } else {
+          imagePreviewContainer.style.display = 'none';
+          fileInputLabel.textContent = 'Pilih Gambar';
+        }
+      });
+      
+      // Fungsi untuk menghapus gambar
+      removeImageBtn.addEventListener('click', function() {
+        imageInput.value = '';
+        imagePreviewContainer.style.display = 'none';
+        fileInputLabel.textContent = 'Pilih Gambar';
+      });
+      
+      // Animasi untuk input yang sedang diisi
+      const inputs = document.querySelectorAll('input[type="text"], textarea');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+          if (!this.value) {
+            this.parentElement.classList.remove('focused');
+          }
+        });
+        
+        // Cek jika input sudah memiliki nilai saat halaman dimuat
+        if (input.value) {
+          input.parentElement.classList.add('focused');
+        }
+      });
+    });
+  </script>
