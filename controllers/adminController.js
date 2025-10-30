@@ -1,3 +1,4 @@
+const fs = require('fs'); 
 const path = require('path');
 const slugify = require('slugify');
 const db = require('../db');
@@ -142,15 +143,33 @@ exports.editPage = async (req, res) => {
 exports.updatePost = async (req, res) => {
   const id = req.params.id;
   const { title, subtitle, content, category, tags } = req.body;
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
+  const newImage = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
-    if (image) {
+    // Ambil data post lama
+    const oldPost = (await db.query(`SELECT image FROM posts WHERE id=$1`, [id])).rows[0];
+
+    // Hapus gambar lama jika ada dan upload baru
+    if (newImage && oldPost?.image) {
+      // Dapatkan nama file lama
+      const oldImageName = path.basename(oldPost.image);
+      const oldImagePath = path.join(__dirname, '..', 'public', 'uploads', oldImageName);
+
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+        console.log('Gambar lama berhasil dihapus:', oldImagePath);
+      } else {
+        console.log('File lama tidak ditemukan:', oldImagePath);
+      }
+    }
+
+    // Update DB
+    if (newImage) {
       await db.query(
         `UPDATE posts 
          SET title=$1, subtitle=$2, content=$3, image=$4, category=$5, tags=$6, updated_at=CURRENT_TIMESTAMP 
          WHERE id=$7`,
-        [title, subtitle, content, image, category, tags, id]
+        [title, subtitle, content, newImage, category, tags, id]
       );
     } else {
       await db.query(
@@ -160,13 +179,13 @@ exports.updatePost = async (req, res) => {
         [title, subtitle, content, category, tags, id]
       );
     }
+
     res.redirect('/admin/dashboard');
   } catch (err) {
     console.error(err);
     res.send('Error updating post');
   }
 };
-
 // ========== Hapus Post ==========
 exports.deletePost = async (req, res) => {
   const id = req.params.id;
