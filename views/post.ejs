@@ -19,8 +19,6 @@
       color: #222;
     }
 
-  
-    
     /* Post Header */
     header h1 {
       font-weight: 700;
@@ -51,11 +49,25 @@
       transform: scale(1.05);
     }
 
-    /* Isi konten */
-    .post-content p {
+    /* Isi konten - DIPERBAIKI UNTUK PARAGRAF */
+    .post-content {
       line-height: 1.8;
       color: #333;
       font-size: 1.05rem;
+    }
+    
+    .post-content p {
+      margin-bottom: 1.25rem;
+      text-align: justify;
+    }
+    
+    .post-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Jika konten plain text dengan line break */
+    .post-content.preserve-linebreak {
+      white-space: pre-line;
     }
 
     /* Tag */
@@ -65,6 +77,7 @@
       color: #111;
       border-radius: 6px;
       margin-right: 4px;
+      padding: 0.4em 0.8em;
     }
 
     /* Related Post */
@@ -147,9 +160,22 @@
           </div>
         <% } %>
 
-        <article class="post-content mb-4">
-          <p><%= post.content %></p>
+        <!-- OPSI 1: Jika konten sudah berformat HTML dengan tag <p> -->
+        <!-- <article class="post-content mb-4">
+          <%- post.content %>
+        </article> -->
+
+        <!-- OPSI 2: Jika konten plain text, uncomment baris di bawah dan comment baris di atas -->
+        <article class="post-content mb-4 preserve-linebreak">
+          <%= post.content %>
         </article>
+       
+
+        <!-- OPSI 3: Jika ingin convert line break jadi <br>, uncomment baris di bawah
+        <article class="post-content mb-4">
+          <%- post.content.replace(/\n/g, '<br>') %>
+        </article>
+        -->
 
         <% if(post.tags){ %>
           <div class="mt-4">
@@ -159,7 +185,7 @@
           </div>
         <% } %>
 
-        <a href="/" class="btn btn-link mt-4" style="text-decoration: none !important;" ><i class="fa fa-arrow-left"></i> Kembali ke Beranda</a>
+        <a href="/" class="btn btn-link mt-4" style="text-decoration: none !important;"><i class="fa fa-arrow-left"></i> Kembali ke Beranda</a>
 
         <% if(relatedPosts && relatedPosts.length > 0){ %>
           <section class="mt-5">
